@@ -1,0 +1,136 @@
+{% extends "app_base.html" %}
+{% set active_page = "expenses" %}
+{% block title %}BudgetBuddy | Expenses{% endblock %}
+{% block content %}
+<main class="tool-page">
+    <section class="tool-heading">
+        <div>
+            <p class="dashboard-eyebrow">TRACK YOUR SPENDING</p>
+            <h1>Expenses</h1>
+            <p class="dashboard-subtitle">Add, edit, or remove your expense entries.</p>
+        </div>
+    </section>
+
+    <section class="dashboard-panel expense-form-panel">
+        <h2>Add an expense</h2>
+        <form method="post" action="{{ url_for('expenses') }}" class="data-form">
+            <label>Description
+                <input name="title" maxlength="120" required placeholder="e.g. Lunch">
+            </label>
+            <label>Amount (₹)
+                <input name="amount" type="number" min="0.01" max="1000000000" step="0.01" required>
+            </label>
+            <label>Category
+                <select name="category" required>
+                    {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Date
+                <input name="spent_on" type="date" value="{{ today }}" required>
+            </label>
+            <label class="form-wide">Notes (optional)
+                <input name="notes" maxlength="500" placeholder="Add a note">
+            </label>
+            <button class="btn" type="submit">Save expense</button>
+        </form>
+    </section>
+
+    <section class="dashboard-panel expense-table-panel">
+        <div class="dashboard-panel-heading">
+            <div>
+                <h2>All expenses</h2>
+                <p>Showing up to 200 most recent entries.</p>
+            </div>
+            {% if expenses %}
+                <label class="expense-search">
+                    <span>Search expenses</span>
+                    <input id="expense-search" type="search" placeholder="Description, category, date…" aria-controls="expenses-table">
+                </label>
+            {% endif %}
+        </div>
+
+        {% if expenses %}
+            <div hidden>
+                {% for expense in expenses %}
+                    <form id="edit-expense-{{ expense.id }}" method="post" action="{{ url_for('edit_expense', expense_id=expense.id) }}"></form>
+                    <form id="delete-expense-{{ expense.id }}" method="post" action="{{ url_for('delete_expense', expense_id=expense.id) }}" class="delete-form"></form>
+                {% endfor %}
+            </div>
+            <div class="table-scroll">
+                <table id="expenses-table" class="data-table expense-table">
+                    <colgroup>
+                        <col class="expense-description-column">
+                        <col class="expense-amount-column">
+                        <col class="expense-category-column">
+                        <col class="expense-date-column">
+                        <col class="expense-notes-column">
+                        <col class="expense-actions-column">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col">Description</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Notes</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                            <tr>
+                                <td>
+                                    <input form="edit-expense-{{ expense.id }}" name="title" value="{{ expense.title }}" maxlength="120" required aria-label="Description">
+                                </td>
+                                <td>
+                                    <input form="edit-expense-{{ expense.id }}" name="amount" type="number" value="{{ "%.2f"|format(expense.amount|float) }}" min="0.01" step="0.01" required aria-label="Amount">
+                                </td>
+                                <td>
+                                    <select form="edit-expense-{{ expense.id }}" name="category" aria-label="Category">
+                                        {% for category in categories %}
+                                            <option value="{{ category }}" {% if expense.category == category %}selected{% endif %}>{{ category }}</option>
+                                        {% endfor %}
+                                        {% if expense.category not in categories %}
+                                            <option value="{{ expense.category }}" selected>{{ expense.category }}</option>
+                                        {% endif %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input form="edit-expense-{{ expense.id }}" name="spent_on" type="date" value="{{ expense.spent_on }}" required aria-label="Date">
+                                </td>
+                                <td>
+                                    <input form="edit-expense-{{ expense.id }}" name="notes" value="{{ expense.notes or '' }}" maxlength="500" aria-label="Notes">
+                                </td>
+                                <td>
+                                    <div class="expense-actions">
+                                        <button class="small-button" type="submit" form="edit-expense-{{ expense.id }}">Save</button>
+                                        <button class="small-button danger-button" type="submit" form="delete-expense-{{ expense.id }}">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p id="expense-search-results" class="expense-search-results" aria-live="polite"></p>
+        {% else %}
+            <div class="dashboard-empty">
+                <h3>No expenses yet</h3>
+                <p>Your expenses will appear here after you add one.</p>
+            </div>
+        {% endif %}
+    </section>
+</main>
+
+<dialog id="delete-confirm-dialog" class="confirm-dialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-description">
+    <h2 id="delete-dialog-title">Delete expense?</h2>
+    <p id="delete-dialog-description">This expense will be permanently removed.</p>
+    <div class="confirm-dialog-actions">
+        <button class="small-button" type="button" data-dialog-cancel>Cancel</button>
+        <button class="small-button danger-button" type="button" data-dialog-confirm>Delete expense</button>
+    </div>
+</dialog>
+<script src="{{ url_for('static', filename='expense-search.js') }}" defer></script>
+{% endblock %}

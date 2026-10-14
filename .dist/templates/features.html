@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BudgetBuddy | Features</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <h2 class="logo">BudgetBuddy</h2>
+
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('features') }}">Features</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <form action="{{ url_for('logout') }}" method="post" class="nav-form">
+                        <button type="submit" class="nav-button">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('signup') }}">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="features-page">
+
+        <h1>Features of BudgetBuddy</h1>
+
+        <p class="page-description">
+            Take control of your money with simple tools designed
+            to help students track spending, plan budgets, and save.
+        </p>
+
+        <div class="feature-list">
+
+            <div class="feature-card">
+                <span>💰</span>
+                <h3>Expense Tracking</h3>
+                <p>Record and manage your daily expenses easily.</p>
+            </div>
+
+            <div class="feature-card">
+                <span>📊</span>
+                <h3>Budget Planning</h3>
+                <p>Set a budget and keep your spending under control.</p>
+            </div>
+
+            <div class="feature-card">
+                <span>📅</span>
+                <h3>Expense History</h3>
+                <p>Review your previous expenses whenever you need.</p>
+            </div>
+
+            <div class="feature-card">
+                <span>🎯</span>
+                <h3>Savings Goals</h3>
+                <p>Plan your savings and work towards your goals.</p>
+            </div>
+
+            <div class="feature-card">
+                <span>📈</span>
+                <h3>Spending Reports</h3>
+                <p>Understand your spending through simple summaries.</p>
+            </div>
+
+            <div class="feature-card">
+                <span>🔎</span>
+                <h3>Search Expenses</h3>
+                <p>Find a particular expense quickly and easily.</p>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
+
+    </main>
+
+    <footer>
+        <p>© 2026 BudgetBuddy | Make every rupee count.</p>
+    </footer>
+
+</body>
+</html>

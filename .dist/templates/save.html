@@ -1,0 +1,33 @@
+{% extends "app_base.html" %}
+{% set active_page = "budget" %}
+{% block title %}BudgetBuddy | Save Budget{% endblock %}
+{% block content %}
+<main class="tool-page narrow-tool-page">
+    <section class="tool-heading">
+        <div>
+            <p class="dashboard-eyebrow">PLAN AHEAD</p>
+            <h1>Save monthly budget</h1>
+            <p class="dashboard-subtitle">Choose a month and enter the spending limit you want to set.</p>
+        </div>
+    </section>
+
+    <section class="dashboard-panel">
+        <form method="get" action="{{ url_for('save_budget') }}" class="month-picker">
+            <label for="month">Budget month</label>
+            <input id="month" name="month" type="month" value="{{ month }}" required>
+            <button class="small-button" type="button" id="view-month">Choose month</button>
+        </form>
+
+        <form method="post" action="{{ url_for('save_budget') }}" class="data-form single-column-form">
+            <input type="hidden" name="month" value="{{ month }}">
+            <label>Budget amount (₹)
+                <input name="amount" type="number" min="0.01" max="1000000000" step="0.01"
+                       value="{{ '%.2f'|format(budget_amount) if budget_amount is not none else '' }}" required>
+            </label>
+            <button class="btn" type="submit">Save budget</button>
+            <a class="small-button" href="{{ url_for('budget', month=month) }}">Cancel</a>
+        </form>
+    </section>
+</main>
+<script src="{{ url_for('static', filename='budget-month-picker.js') }}" defer></script>
+{% endblock %}

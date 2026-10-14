@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BudgetBuddy{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='flash-messages.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}" class="logo">BudgetBuddy</a>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('expenses') }}" class="{% if active_page == 'expenses' %}active{% endif %}">Expenses</a>
+                <a href="{{ url_for('budget') }}" class="{% if active_page == 'budget' %}active{% endif %}">Budget</a>
+                <a href="{{ url_for('reports') }}" class="{% if active_page == 'reports' %}active{% endif %}">Reports</a>
+                <form action="{{ url_for('logout') }}" method="post" class="nav-form">
+                    <button type="submit" class="nav-button">Log out</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="page-messages" aria-live="polite">
+                {% for category, message in messages %}
+                    <p class="form-message {{ category }}" role="status">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <p>© 2026 BudgetBuddy | Make every rupee count.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "app_base.html" %}
+{% set active_page = "budget" %}
+{% block title %}BudgetBuddy | Budget{% endblock %}
+{% block content %}
+<main class="tool-page narrow-tool-page">
+    <section class="tool-heading">
+        <div>
+            <p class="dashboard-eyebrow">PLAN AHEAD</p>
+            <h1>Monthly budget</h1>
+            <p class="dashboard-subtitle">Set a spending target and compare it with expenses.</p>
+        </div>
+    </section>
+
+    <section class="dashboard-panel">
+        <form method="get" action="{{ url_for('budget') }}" class="month-picker">
+            <label for="month">Choose month</label>
+            <input id="month" name="month" type="month" value="{{ month[:7] }}" required>
+            <button class="small-button" type="button" id="view-month">View month</button>
+        </form>
+        <a class="btn budget-save-link" href="{{ url_for('save_budget', month=month[:7]) }}">Save or update budget</a>
+    </section>
+
+    <section class="dashboard-stats budget-summary">
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Budget</p>
+            <p class="dashboard-stat dashboard-stat-muted">
+                {% if budget_amount is not none %}₹{{ "%.2f"|format(budget_amount) }}{% else %}Not set{% endif %}
+            </p>
+        </article>
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Spent</p>
+            <p class="dashboard-stat dashboard-stat-muted">₹{{ "%.2f"|format(total_spent) }}</p>
+        </article>
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Remaining</p>
+            <p class="dashboard-stat dashboard-stat-muted">
+                {% if remaining is not none %}₹{{ "%.2f"|format(remaining) }}{% else %}—{% endif %}
+            </p>
+        </article>
+    </section>
+</main>
+<script src="{{ url_for('static', filename='budget-month-picker.js') }}" defer></script>
+{% endblock %}

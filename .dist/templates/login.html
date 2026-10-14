@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BudgetBuddy | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='flash-messages.js') }}" defer></script>
+</head>
+<body>
+
+    <div class="auth-page">
+
+        <a href="{{ url_for('home') }}" class="back-link">← Back to Home</a>
+
+        <div class="auth-card">
+            <h2 class="logo">BudgetBuddy</h2>
+
+            <h1>Welcome Back!</h1>
+            <p class="auth-quote">Your financial journey continues here.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <p class="form-message {{ category }}" role="status">{{ message }}</p>
+                {% endfor %}
+            {% endwith %}
+
+            <form action="{{ url_for('login') }}" method="post">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email"
+                       placeholder="Enter your email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Enter your password" required>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <p class="auth-footer">
+                Don't have an account?
+                <a href="{{ url_for('signup') }}">Sign Up</a>
+            </p>
+        </div>
+
+        <div class="auth-circle auth-circle-one"></div>
+        <div class="auth-circle auth-circle-two"></div>
+
+    </div>
+
+</body>
+</html>

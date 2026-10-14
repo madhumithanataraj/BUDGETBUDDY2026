@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BudgetBuddy - Student Expense Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}" class="logo">BudgetBuddy</a>
+
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="active">Home</a>
+                <a href="{{ url_for('features') }}">Features</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('expenses') }}">Expenses</a>
+                    <a href="{{ url_for('budget') }}">Budget</a>
+                    <a href="{{ url_for('reports') }}">Reports</a>
+                    <form action="{{ url_for('logout') }}" method="post" class="nav-form">
+                        <button type="submit" class="nav-button">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('signup') }}" class="nav-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <span class="welcome">YOUR MONEY, YOUR CONTROL</span>
+
+                <h1>
+                    Spend Smart.<br>
+                    Save <span>More.</span>
+                </h1>
+
+                <p class="description">
+                    Take control of your student finances with BudgetBuddy.
+                    Track expenses, plan your budget, and build better
+                    money habits — one day at a time.
+                </p>
+
+                <div class="hero-buttons">
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('expenses') }}" class="btn">Manage expenses <span>→</span></a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="btn">Get Started <span>→</span></a>
+                    {% endif %}
+                    <a href="{{ url_for('features') }}" class="btn-outline">Explore Features</a>
+                </div>
+
+                <p class="hero-note">✦ Simple tracking. Smarter spending. Brighter savings.</p>
+            </div>
+
+            <div class="hero-visual">
+                <div class="money-card">
+                    <div class="card-top">
+                        <span>✦</span>
+                        <span>BUDGETBUDDY</span>
+                    </div>
+
+                    <p class="card-label">YOUR FINANCIAL JOURNEY</p>
+                    <h2>Small steps.<br><span>Big savings.</span></h2>
+
+                    <div class="card-bottom">
+                        <span>TRACK</span>
+                        <span>PLAN</span>
+                        <span>GROW</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

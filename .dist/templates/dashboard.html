@@ -1,0 +1,76 @@
+{% extends "app_base.html" %}
+{% set active_page = "dashboard" %}
+{% block title %}BudgetBuddy | Dashboard{% endblock %}
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-heading" aria-labelledby="dashboard-title">
+        <div>
+            <p class="dashboard-eyebrow">YOUR MONEY, YOUR CONTROL</p>
+            <h1 id="dashboard-title">Welcome, {{ user_name }}!</h1>
+            <p class="dashboard-subtitle">Here is your financial snapshot for this month.</p>
+        </div>
+        <a class="btn" href="{{ url_for('expenses') }}">＋ Add expense</a>
+    </section>
+
+    <section class="dashboard-stats" aria-label="Monthly financial summary">
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Spent this month</p>
+            <p class="dashboard-stat">₹{{ "%.2f"|format(total_spent) }}</p>
+            <p class="dashboard-card-note">Across this month’s expenses</p>
+        </article>
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Monthly budget</p>
+            <p class="dashboard-stat dashboard-stat-muted">
+                {% if budget_amount is not none %}₹{{ "%.2f"|format(budget_amount) }}{% else %}Not set{% endif %}
+            </p>
+            <p class="dashboard-card-note"><a href="{{ url_for('budget') }}">Manage monthly budget</a></p>
+        </article>
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Remaining</p>
+            <p class="dashboard-stat dashboard-stat-muted">
+                {% if remaining is not none %}₹{{ "%.2f"|format(remaining) }}{% else %}—{% endif %}
+            </p>
+            <p class="dashboard-card-note">Budget minus monthly expenses</p>
+        </article>
+    </section>
+
+    <section class="dashboard-content">
+        <article class="dashboard-panel">
+            <div class="dashboard-panel-heading">
+                <div>
+                    <h2>Recent expenses</h2>
+                    <p>Your latest entries for this month.</p>
+                </div>
+                <a class="dashboard-text-link" href="{{ url_for('expenses') }}">Manage expenses →</a>
+            </div>
+            {% if expenses %}
+                <div class="expense-list">
+                    {% for expense in expenses %}
+                        <div class="expense-list-row">
+                            <div>
+                                <strong>{{ expense.title }}</strong>
+                                <span>{{ expense.category }} · {{ expense.spent_on }}</span>
+                            </div>
+                            <strong>₹{{ "%.2f"|format(expense.amount|float) }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="dashboard-empty">
+                    <span class="dashboard-empty-icon" aria-hidden="true">₹</span>
+                    <h3>No expenses this month</h3>
+                    <p>Add your first expense to start tracking where your money goes.</p>
+                    <a href="{{ url_for('expenses') }}" class="dashboard-text-link">Add an expense →</a>
+                </div>
+            {% endif %}
+        </article>
+
+        <aside class="dashboard-panel budget-panel">
+            <p class="dashboard-eyebrow">YOUR MONEY AT A GLANCE</p>
+            <h2>Make your spending easier to understand</h2>
+            <p>Review monthly trends and category totals in your reports.</p>
+            <a href="{{ url_for('reports') }}" class="dashboard-text-link">View reports →</a>
+        </aside>
+    </section>
+</main>
+{% endblock %}

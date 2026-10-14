@@ -1,0 +1,59 @@
+{% extends "app_base.html" %}
+{% set active_page = "reports" %}
+{% block title %}BudgetBuddy | Reports{% endblock %}
+{% block content %}
+<main class="tool-page">
+    <section class="tool-heading">
+        <div>
+            <p class="dashboard-eyebrow">UNDERSTAND YOUR SPENDING</p>
+            <h1>Reports</h1>
+            
+        </div>
+    </section>
+
+    <section class="dashboard-stats">
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Total spent</p>
+            <p class="dashboard-stat">₹{{ "%.2f"|format(total) }}</p>
+            <p class="dashboard-card-note">Across the report period</p>
+        </article>
+        <article class="dashboard-card">
+            <p class="dashboard-card-label">Expenses recorded</p>
+            <p class="dashboard-stat">{{ expense_count }}</p>
+            <p class="dashboard-card-note">Entries in the last six months</p>
+        </article>
+    </section>
+
+    <section class="dashboard-content report-content">
+        <article class="dashboard-panel">
+            <h2>Spending by month</h2>
+            {% if months %}
+                <div class="report-bars">
+                    {% for month in months %}
+                        <div class="report-bar-row">
+                            <span>{{ month.label }}</span>
+                            <div class="report-track"><div class="report-fill" style="width: {{ month.width }}%"></div></div>
+                            <strong>₹{{ "%.2f"|format(month.amount) }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-copy">No expense data is available for this period yet.</p>
+            {% endif %}
+        </article>
+
+        <article class="dashboard-panel">
+            <h2>Spending by category</h2>
+            {% if category_totals %}
+                <div class="category-report-list">
+                    {% for category, amount in category_totals %}
+                        <div class="expense-list-row"><span>{{ category }}</span><strong>₹{{ "%.2f"|format(amount) }}</strong></div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-copy">Your category summary will appear after you add expenses.</p>
+            {% endif %}
+        </article>
+    </section>
+</main>
+{% endblock %}
